@@ -23,12 +23,12 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const FireBaseContext = createContext(null);
 
 const firebaseConfig = {
-  apiKey: "AIzaSyARsxrylwBawuMXUqbgzqU-P9ELNiX4PfE",
-  authDomain: "blogging-task.firebaseapp.com",
-  projectId: "blogging-task",
-  storageBucket: "blogging-task.appspot.com",
-  messagingSenderId: "644622861697",
-  appId: "1:644622861697:web:c0b6e5a0e31e913dc9d480",
+  apiKey: "AIzaSyB0ptINASqG9tTQsR_Rl0ZykyBXAC0BWhs",
+  authDomain: "taskapp-d6ec3.firebaseapp.com",
+  projectId: "taskapp-d6ec3",
+  storageBucket: "taskapp-d6ec3.appspot.com",
+  messagingSenderId: "804664946011",
+  appId: "1:804664946011:web:572251550cc85952abfe7e",
 };
 
 export const useFirebase = () => useContext(FireBaseContext);
@@ -41,14 +41,23 @@ const storage = getStorage(firebaseApp);
 export const FireBaseProvider = (props) => {
   const [user, setUser] = useState(null);
   useEffect(() => {
-    onAuthStateChanged(firebaseAuth, (user) => {
-      if (user) setUser(user);
-      else setUser(null);
-    });
+    onAuthStateChanged(
+      firebaseAuth,
+      (user) => {
+        if (user) setUser(user);
+        else setUser(null);
+      },
+      []
+    );
   });
   const signupUserWithEmailAndPass = async (email, password) => {
     try {
-      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      const result = await createUserWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
+      console.log("after sign up", result);
       return "Register Successfully";
     } catch (error) {
       return error.message;
@@ -58,23 +67,18 @@ export const FireBaseProvider = (props) => {
   const signInWithEmailAndPass = async (email, password) => {
     try {
       await signInWithEmailAndPassword(firebaseAuth, email, password);
-      return "Loggin SuccessFully";
+      return "Login SuccessFully";
     } catch (error) {
       return error.message;
     }
   };
 
-  const handleCreateNewPost = async (title, image, description) => {
-    const imageRef = ref(
-      storage,
-      `uploads/coverImage/${Date.now()}-${image.name}`
-    );
-    const uploadResult = await uploadBytes(imageRef, image);
-
-    const result = await addDoc(collection(fireStore, "blogposts"), {
+  const handleCreateNewTask = async (title, description, dueDate) => {
+    const result = await addDoc(collection(fireStore, "allTasks"), {
       title,
       description,
-      imageUrl: uploadResult.ref.fullPath,
+      dueDate,
+      status: "Pending",
       userEmail: isUserLoggedIn.email,
       userId: isUserLoggedIn.uid,
     });
@@ -83,11 +87,11 @@ export const FireBaseProvider = (props) => {
   };
 
   const getAllPosts = () => {
-    return getDocs(collection(fireStore, "blogposts"));
+    return getDocs(collection(fireStore, "allTasks"));
   };
 
   const getPostbyId = async (id) => {
-    const docRef = doc(fireStore, "blogposts", id);
+    const docRef = doc(fireStore, "allTasks", id);
     const result = await getDoc(docRef);
     return result.data();
   };
@@ -103,7 +107,7 @@ export const FireBaseProvider = (props) => {
   };
 
   const deletePost = async (id) => {
-    await deleteDoc(doc(fireStore, "blogposts", id));
+    await deleteDoc(doc(fireStore, "allTasks", id));
     return "post Deleted Successfully";
   };
 
@@ -134,7 +138,7 @@ export const FireBaseProvider = (props) => {
         signupUserWithEmailAndPass,
         signInWithEmailAndPass,
         isUserLoggedIn,
-        handleCreateNewPost,
+        handleCreateNewTask,
         getAllPosts,
         getPostbyId,
         getImageUrl,

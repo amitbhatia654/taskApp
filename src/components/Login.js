@@ -15,7 +15,7 @@ export default function Login() {
         e.preventDefault();
 
         var result = await Firebase.signInWithEmailAndPass(email, password)
-        if (result === "Loggin SuccessFully")
+        if (result === "Login SuccessFully")
             navigate('/')
 
         else

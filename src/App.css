@@ -3,5 +3,12 @@
 }
 
 .mynav {
-    background-color: rgb(212, 174, 112);
+    background-color: rgb(4, 192, 255);
+}
+
+.postCard {
+    border: 1px solid black;
+    border-radius: 20px;
+    width: 300px;
+    padding: 20px;
 }

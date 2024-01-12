@@ -17,15 +17,14 @@ export default function Home() {
     useEffect(() => {
         firebase.getAllPosts().then((data) =>
             setAllPosts(data.docs))
-    })
+    }, [])
 
 
     return (
         <div className='container-fluid my-5'>
-            Hello Bhatia ji
             <div className='row d-flex justify-content-center'>
                 <div className='col-md-5'>
-                    {allPosts.slice(page * 2 - 2, page * 2).map((e) => {
+                    {allPosts.map((e) => {
                         return (
                             <div className=' my-2 '>
                                 <PostsCard
@@ -38,11 +37,12 @@ export default function Home() {
                 </div>
             </div>
 
-            {page >= 1 && <div className='d-flex justify-content-center'>
+            {/* {page >= 1 && <div className='d-flex justify-content-center'>
                 <span ><button onClick={() => setPage(page - 1)} className='btn btn-primary' disabled={page < 2 ? true : false}>Previous</button></span>
                 <span className='px-3 bold fs-5'> {page} -{Math.ceil(allPosts.length / 2)}  of {Math.ceil(allPosts.length / 2)}</span>
                 <span ><button onClick={() => setPage(page + 1)} className='btn btn-primary' disabled={page >= Math.ceil(allPosts.length / 2) ? true : false}>Next</button></span>
-            </div>}
+            </div>} */}
+
         </div >
     )
 }
