@@ -18,7 +18,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const FireBaseContext = createContext(null);
 
@@ -111,19 +111,14 @@ export const FireBaseProvider = (props) => {
     return "post Deleted Successfully";
   };
 
-  const UpdatePost = async (id, title, image, description) => {
+  const UpdatePost = async (id, title, description, dueDate, status) => {
     try {
-      const imageRef = ref(
-        storage,
-        `uploads/coverImage/${Date.now()}-${image.name}`
-      );
-      const uploadResult = await uploadBytes(imageRef, image);
-
-      const PostRef = doc(fireStore, "blogposts", id);
+      const PostRef = doc(fireStore, "allTasks", id);
       const res = await updateDoc(PostRef, {
         title,
-        imageUrl: uploadResult.ref.fullPath,
         description,
+        dueDate,
+        status,
       });
       return res;
     } catch (error) {

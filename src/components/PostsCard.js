@@ -35,12 +35,12 @@ export default function PostsCard({ id, data, refreshFunc }) {
             </div>
 
 
+            {firebase.isUserLoggedIn?.uid === data.userId &&
+                <button className='btn btn-danger mx-1' onClick={() => navigate(`editPost/${id}`)} ><i class="fa-solid fa-pen-to-square"></i></button>}
 
             {firebase.isUserLoggedIn?.uid === data.userId &&
-                <button className='btn btn-danger ' onClick={() => handleDelete(id)}>Delete</button>}
+                <button className='btn btn-danger ' onClick={() => handleDelete(id)}><i class="fa-solid fa-trash"></i></button>}
 
-            {firebase.isUserLoggedIn?.uid === data.userId &&
-                <button className='btn btn-danger mx-1' onClick={() => navigate(`editPost/${id}`)} >Edit</button>}
 
             <Toaster></Toaster>
         </div>
