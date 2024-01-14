@@ -11,12 +11,6 @@ export default function Home() {
     const [allPosts, setAllPosts] = useState([])
     const [taskName, setTaskName] = useState("Pending")
 
-
-    const refreshFunc = () => {
-        firebase.getAllPosts().then((data) =>
-            setAllPosts(data.docs))
-    }
-
     useEffect(() => {
         firebase.getAllPosts().then((data) =>
             setAllPosts(data.docs))
@@ -30,7 +24,6 @@ export default function Home() {
             return
         const res = await firebase.deletePost(id)
         if (res === "post Deleted Successfully") {
-            refreshFunc()
             toast.success("Task Deleted Successfully")
         }
     }
@@ -41,7 +34,6 @@ export default function Home() {
 
         await firebase.UpdatePost(e.id, e.data().title, e.data().description, e.data().dueDate, status)
         toast.success("Status Changes Successfully")
-        refreshFunc()
 
 
     }
@@ -49,14 +41,16 @@ export default function Home() {
 
     return (
         <div className='container-fluid my-5'>
-            <button className='btn btn-primary mx-1' onClick={() => setTaskName("Pending")} disabled={taskName === "Pending" && true}>Pending Task</button>
-            <button className='btn btn-primary' onClick={() => setTaskName("completed")} disabled={taskName === "completed" && true}>Completed task</button>
+            <button className='btn btn-primary mx-1' onClick={() => setTaskName("Pending")} disabled={taskName === "Pending" && true}> Pending Task</button>
+            <button className='btn btn-primary' onClick={() => setTaskName("completed")} disabled={taskName === "completed" && true}> Completed task</button>
             <div className='row d-flex justify-content-center'>
                 <div className='col-md-5'>
-                    <h3>{taskName} Tasks</h3>
-                    {allPosts.filter((d) => d.data().status === taskName).map((e) => {
+                    <h3>All {taskName} Tasks</h3>
+                    {allPosts.filter((d) => d.data().status === taskName).map((e, key) => {
                         return (
-                            <div className=' my-2 postCard'>
+                            <div className=' my-2 postCard' key={key}>
+
+
                                 <h5 className="card-title">Task Name : {e.data().title}</h5>
                                 <div className="card-body">
                                     <p className="card-text">Description : {e.data().description}</p>

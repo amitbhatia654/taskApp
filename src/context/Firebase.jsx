@@ -17,6 +17,8 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
@@ -39,7 +41,7 @@ const fireStore = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
 
 export const FireBaseProvider = (props) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   useEffect(() => {
     onAuthStateChanged(
       firebaseAuth,
@@ -50,14 +52,12 @@ export const FireBaseProvider = (props) => {
       []
     );
   });
+
+  const isUserLoggedIn = user ? user : null;
+
   const signupUserWithEmailAndPass = async (email, password) => {
     try {
-      const result = await createUserWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
-      );
-      console.log("after sign up", result);
+      await createUserWithEmailAndPassword(firebaseAuth, email, password);
       return "Register Successfully";
     } catch (error) {
       return error.message;
@@ -86,7 +86,12 @@ export const FireBaseProvider = (props) => {
     return result.id;
   };
 
-  const getAllPosts = () => {
+  const getAllPosts = async (id) => {
+    // const q = query(
+    //   collection(fireStore, "allTasks"),
+    //   where("userId", "===", firebaseAuth?.currentUser?.uid)
+    // );
+    // return await getDocs(q);
     return getDocs(collection(fireStore, "allTasks"));
   };
 
@@ -99,8 +104,6 @@ export const FireBaseProvider = (props) => {
   const getImageUrl = (path) => {
     return getDownloadURL(ref(storage, path));
   };
-
-  const isUserLoggedIn = user ? user : null;
 
   const SignOutUser = () => {
     signOut(firebaseAuth);
